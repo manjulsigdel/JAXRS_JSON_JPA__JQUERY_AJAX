@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="assets/js/jquery.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div>
+            <div id="courses"></div>
+            <div> <h1 id="result"></h1></div>
+            <a href="javascript:void(0)" id="add-course">Add course</a>
+            
+            <div id="dialog" style="display:none">
+            <form action="api/course/save" id="course-form" method="post">
+                <div>
+                    <label>Name</label>
+                    <input type="text" name="name"/>
+                </div>
+                <div>
+                    <label>Fees</label>
+                    <input type="text" name="fees"/>
+                </div>
+                <div>
+                    <label>Duration</label>
+                    <input type="text" name="duration"/>
+                </div>
+                <div>
+                    <label>Duration type</label>
+                    <select name="duration_type">
+                        <option value="">Select Duration Type</option>
+                        <option value="D">Days</option>
+                        <option value="W">Week</option>
+                        <option value="M">Month</option>
+                        <option value="Y">Year</option>
+                    </select>
+                </div>  
+                <div>
+                    <label>Status</label>
+                    <label>
+                    <input type="checkbox" name="status" value="1"> Active
+                    </label>
+                </div>
+                <button type="submit" id="btn-save">Save</button>
+                
+            </form>
+                </div>
+        </div>
+    </body>
+    
+    <script>
+        
+        function loadData(){
+           
+            $.getJSON("api/course",function(data){
+                var content="";
+                $.each(data,function(i,o){
+                    
+                    content+=o.name +" <a href='javascript:void(0)' id='deletedata'>Delete course</a> "+ "<br/>";
+                });
+                $("#courses").html(content);
+            });
+        }
+        
+        $(document).on('ready',function(){
+            
+            loadData();
+            
+            $("#deletedata").on("click",function(){
+                alert("jhandai delete vako");
+            });
+            
+            $("#add-course").on("click",function(){
+                $("#dialog").toggle();
+                
+            });
+           $("#btn-save").on("click",function(){
+               $.post("api/course/save",$("#course-form").serialize(),function(data){
+                   //$("#result").html(data);
+                   loadData();
+                   $("#dialog").toggle();
+               });
+               return false;
+           }) ;
+        });
+    </script>
+        
+    
+</html>
